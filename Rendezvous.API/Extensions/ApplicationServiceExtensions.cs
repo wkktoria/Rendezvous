@@ -1,5 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.Data;
+using Rendezvous.API.Data.Repositories;
 using Rendezvous.API.Interfaces;
 using Rendezvous.API.Services;
 
@@ -17,6 +18,8 @@ public static class ApplicationServiceExtensions
         });
         services.AddCors();
         services.AddScoped<ITokenService, TokenService>();
+        services.AddScoped<IUserRepository, UserRepository>();
+        services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
         return services;
     }
