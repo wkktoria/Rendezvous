@@ -1,1 +1,7 @@
-/* You can add global styles to this file, and also import other style files */
+.tab-pane {
+  padding: 10px;
+}
+
+.member-tabset > .nav-tabs > li.active {
+  border-bottom: 4px solid rgb(235, 104, 100);
+}

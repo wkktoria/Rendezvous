@@ -30,7 +30,7 @@ public class Seed
             using var hmac = new HMACSHA512();
 
             user.UserName = user.UserName.ToLower();
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(" "));
+            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("P@$$W0rd"));
             user.PasswordSalt = hmac.Key;
 
             context.Users.Add(user);
