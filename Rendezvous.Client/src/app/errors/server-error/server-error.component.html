@@ -1,0 +1,22 @@
+<div class="container">
+  <h1>Internal Server Error</h1>
+
+  @if(error) {
+  <h2 class="text-danger">Error: {{ error.message }}</h2>
+  <p class="fst-italic">
+    Note: If you are seeing this error then it is API problem.
+  </p>
+  }
+
+  <h3>What to do next?</h3>
+  <ol>
+    <li>
+      Open developer console and check failing network request in the network
+      tab.
+    </li>
+    <li>Examine the URL of the failing request.</li>
+  </ol>
+
+  <h3>The stack trace</h3>
+  <code class="bg-light">{{ error.details }}</code>
+</div>
