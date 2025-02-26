@@ -1,16 +1,14 @@
+using System.Security.Claims;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
-using Rendezvous.API.Data;
 using Rendezvous.API.DTOs;
-using Rendezvous.API.Entities;
 using Rendezvous.API.Interfaces;
 
 namespace Rendezvous.API.Controllers;
 
 [Authorize]
-public class UsersController(IUserRepository userRepository) : BaseApiController
+public class UsersController(IUserRepository userRepository, IMapper mapper) : BaseApiController
 {
     // GET: /api/users
     [HttpGet]
@@ -32,5 +30,33 @@ public class UsersController(IUserRepository userRepository) : BaseApiController
         }
 
         return Ok(user);
+    }
+
+    // PUT: /api/users
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(MemberUpdateDto memberUpdateDto)
+    {
+        var username = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        if (username == null)
+        {
+            return BadRequest("No username found in token.");
+        }
+
+        var user = await userRepository.GetUserByUsernameAsync(username);
+
+        if (user == null)
+        {
+            return BadRequest("Could not find user.");
+        }
+
+        mapper.Map(memberUpdateDto, user);
+
+        if (await userRepository.SaveAllAsync())
+        {
+            return NoContent();
+        }
+
+        return BadRequest("Failed to update the user.");
     }
 }
