@@ -29,6 +29,14 @@
         class="btn dropdown-toggle text-light text-decoration-none"
         dropdownToggle
       >
+        <img
+          src="{{
+            accountService.currentUser()?.photoUrl ||
+              'https://placehold.co/200?text=User'
+          }}"
+          alt="User main image"
+          class="me-2"
+        />
         Welcome {{ accountService.currentUser()?.username | titlecase }}
       </button>
       <div class="dropdown-menu" *dropdownMenu>
