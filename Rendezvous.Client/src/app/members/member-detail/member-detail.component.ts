@@ -36,10 +36,6 @@ export class MemberDetailComponent implements OnInit {
           this.images.push(new ImageItem({ src: p.url, thumb: p.url }));
         });
       },
-      // next: (member) => {
-      //   member.photoUrl = undefined;
-      //   this.member = member;
-      // },
     });
   }
 }

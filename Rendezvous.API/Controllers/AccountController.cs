@@ -1,14 +1,16 @@
 using System.Security.Cryptography;
 using System.Text;
+using AutoMapper;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.Data;
 using Rendezvous.API.DTOs;
+using Rendezvous.API.Entities;
 using Rendezvous.API.Interfaces;
 
 namespace Rendezvous.API.Controllers;
 
-public class AccountController(DataContext context, ITokenService tokenService) : BaseApiController
+public class AccountController(DataContext context, ITokenService tokenService, IMapper mapper) : BaseApiController
 {
     // POST: /api/account/register
     [HttpPost("register")]
@@ -19,25 +21,22 @@ public class AccountController(DataContext context, ITokenService tokenService) 
             return BadRequest("Username is taken.");
         }
 
-        return Ok();
+        using var hmac = new HMACSHA512();
 
-        // using var hmac = new HMACSHA512();
+        var user = mapper.Map<AppUser>(registerDto);
+        user.UserName = registerDto.Username.ToLower();
+        user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password));
+        user.PasswordSalt = hmac.Key;
 
-        // var user = new AppUser
-        // {
-        //     UserName = registerDto.Username.ToLower(),
-        //     PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(registerDto.Password)),
-        //     PasswordSalt = hmac.Key
-        // };
+        context.Users.Add(user);
+        await context.SaveChangesAsync();
 
-        // context.Users.Add(user);
-        // await context.SaveChangesAsync();
-
-        // return Ok(new UserDto
-        // {
-        //     Username = user.UserName,
-        //     Token = tokenService.CreateToken(user)
-        // });
+        return Ok(new UserDto
+        {
+            Username = user.UserName,
+            KnownAs = user.KnownAs,
+            Token = tokenService.CreateToken(user)
+        });
     }
 
     // POST: /api/account/login
@@ -67,6 +66,7 @@ public class AccountController(DataContext context, ITokenService tokenService) 
         return Ok(new UserDto
         {
             Username = user.UserName,
+            KnownAs = user.KnownAs,
             Token = tokenService.CreateToken(user),
             PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url
         });

@@ -1,0 +1,26 @@
+<div class="form-floating mb-3 overflow-hidden">
+  <input
+    [type]="type()"
+    class="form-control"
+    [class.is-invalid]="control.invalid && control.touched"
+    [formControl]="control"
+    placeholder="{{ label() }}"
+  />
+  <label>{{ label() }}</label>
+  <div *ngIf="control.hasError('required')" class="invalid-feedback text-start">
+    Please enter a {{ label() }}.
+  </div>
+  <div
+    *ngIf="control.hasError('minlength')"
+    class="invalid-feedback text-start"
+  >
+    {{ label() }} must be at least
+    {{control.errors?.['minlength'].requiredLength}} characters.
+  </div>
+  <div
+    *ngIf="control.hasError('isMatching')"
+    class="invalid-feedback text-start"
+  >
+    Values do not match.
+  </div>
+</div>
