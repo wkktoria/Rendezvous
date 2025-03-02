@@ -4,18 +4,22 @@ using Microsoft.AspNetCore.Mvc;
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
 using Rendezvous.API.Extensions;
+using Rendezvous.API.Helpers;
 using Rendezvous.API.Interfaces;
 
 namespace Rendezvous.API.Controllers;
 
 [Authorize]
-public class UsersController(IUserRepository userRepository, IMapper mapper, IPhotoService photoService) : BaseApiController
+public class UsersController(
+    IUserRepository userRepository,
+    IMapper mapper, IPhotoService photoService) : BaseApiController
 {
     // GET: /api/users
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers()
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUsers([FromQuery] UserParams userParams)
     {
-        var users = await userRepository.GetMembersAsync();
+        var users = await userRepository.GetMembersAsync(userParams);
+        Response.AddPaginationHeader(users);
         return Ok(users);
     }
 

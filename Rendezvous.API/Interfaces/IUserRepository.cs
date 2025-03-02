@@ -1,5 +1,6 @@
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
+using Rendezvous.API.Helpers;
 
 namespace Rendezvous.API.Interfaces;
 
@@ -15,7 +16,7 @@ public interface IUserRepository
 
     Task<AppUser?> GetUserByUsernameAsync(string username);
 
-    Task<IEnumerable<MemberDto>> GetMembersAsync();
+    Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams);
 
     Task<MemberDto?> GetMemberAsync(string username);
 }

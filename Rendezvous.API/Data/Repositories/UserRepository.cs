@@ -3,6 +3,7 @@ using AutoMapper.QueryableExtensions;
 using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
+using Rendezvous.API.Helpers;
 using Rendezvous.API.Interfaces;
 
 namespace Rendezvous.API.Data.Repositories;
@@ -17,11 +18,10 @@ public class UserRepository(DataContext context, IMapper mapper) : IUserReposito
             .SingleOrDefaultAsync();
     }
 
-    public async Task<IEnumerable<MemberDto>> GetMembersAsync()
+    public async Task<PagedList<MemberDto>> GetMembersAsync(UserParams userParams)
     {
-        return await context.Users
-            .ProjectTo<MemberDto>(mapper.ConfigurationProvider)
-            .ToListAsync();
+        var query = context.Users.ProjectTo<MemberDto>(mapper.ConfigurationProvider);
+        return await PagedList<MemberDto>.CreateAsync(query, userParams.PageNumber, userParams.PageSize);
     }
 
     public async Task<AppUser?> GetUserByIdAsync(int id)
