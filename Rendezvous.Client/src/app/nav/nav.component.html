@@ -37,7 +37,7 @@
           alt="User main image"
           class="me-2"
         />
-        Welcome {{ accountService.currentUser()?.username | titlecase }}
+        Welcome {{ accountService.currentUser()?.knownAs }}
       </button>
       <div class="dropdown-menu" *dropdownMenu>
         <a routerLink="/member/edit" class="dropdown-item">Edit profile</a>
