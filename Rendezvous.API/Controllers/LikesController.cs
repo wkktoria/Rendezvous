@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Mvc;
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
 using Rendezvous.API.Extensions;
+using Rendezvous.API.Helpers;
 using Rendezvous.API.Interfaces;
 
 namespace Rendezvous.API.Controllers;
@@ -51,9 +52,12 @@ public class LikesController(ILikesRepository likesRepository) : BaseApiControll
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUserLikes(string predicate)
+    public async Task<ActionResult<IEnumerable<MemberDto>>> GetUserLikes([FromQuery] LikesParams likesParams)
     {
-        var users = await likesRepository.GetUserLikesAsync(predicate, User.GetUserId());
+        likesParams.UserId = User.GetUserId();
+        var users = await likesRepository.GetUserLikesAsync(likesParams);
+
+        Response.AddPaginationHeader(users);
         return Ok(users);
     }
 }

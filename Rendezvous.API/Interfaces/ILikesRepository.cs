@@ -1,5 +1,6 @@
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
+using Rendezvous.API.Helpers;
 
 namespace Rendezvous.API.Interfaces;
 
@@ -7,7 +8,7 @@ public interface ILikesRepository
 {
     Task<UserLike?> GetUserLikeAsync(int sourceUserId, int targetUserId);
 
-    Task<IEnumerable<MemberDto>> GetUserLikesAsync(string predicate, int userId);
+    Task<PagedList<MemberDto>> GetUserLikesAsync(LikesParams likesParams);
 
     Task<IEnumerable<int>> GetCurrentUserLikeIdsAsync(int currentUserId);
 
