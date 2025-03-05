@@ -1,7 +1,7 @@
 <div class="container mt-5">
   <div class="text-center">
-    @if (!registerMode) {
     <h1>Find your soul mate</h1>
+    @if (accountService.currentUser() === null){ @if (!registerMode) {
     <p class="lead">Sign up to view your matches.</p>
     <div class="text-center">
       <button (click)="registerToggle()" class="btn btn-primary btn-lg me-2">
@@ -19,6 +19,8 @@
         </div>
       </div>
     </div>
+    } } @else {
+    <p>Go to <a href="/members"> matches</a> to see people who you may like.</p>
     }
   </div>
 </div>
