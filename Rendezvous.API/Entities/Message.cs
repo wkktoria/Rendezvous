@@ -10,7 +10,7 @@ public class Message
 
     public required string Content { get; set; }
 
-    public DateTime MessageSet { get; set; } = DateTime.UtcNow;
+    public DateTime MessageSent { get; set; } = DateTime.UtcNow;
 
     public DateTime? DateRead { get; set; }
 
