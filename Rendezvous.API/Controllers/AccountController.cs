@@ -44,9 +44,9 @@ public class AccountController(DataContext context, ITokenService tokenService, 
     {
         var user = await context.Users
             .Include(u => u.Photos)
-            .FirstOrDefaultAsync(u => u.UserName.ToLower() == loginDto.Username.ToLower());
+            .FirstOrDefaultAsync(u => u.UserName == loginDto.Username.ToLower());
 
-        if (user == null)
+        if (user == null || user.UserName == null)
         {
             return Unauthorized("Invalid username.");
         }
@@ -63,6 +63,6 @@ public class AccountController(DataContext context, ITokenService tokenService, 
 
     private async Task<bool> UserExists(string username)
     {
-        return await context.Users.AnyAsync(u => u.UserName.ToLower() == username.ToLower());
+        return await context.Users.AnyAsync(u => u.NormalizedUserName == username.ToUpper());
     }
 }
