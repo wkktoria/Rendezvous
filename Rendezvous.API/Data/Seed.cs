@@ -1,5 +1,4 @@
 using System.Security.Cryptography;
-using System.Text;
 using System.Text.Json;
 using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.Entities;
@@ -30,8 +29,6 @@ public class Seed
             using var hmac = new HMACSHA512();
 
             user.UserName = user.UserName.ToLower();
-            user.PasswordHash = hmac.ComputeHash(Encoding.UTF8.GetBytes("P@$$W0rd"));
-            user.PasswordSalt = hmac.Key;
 
             context.Users.Add(user);
         }
