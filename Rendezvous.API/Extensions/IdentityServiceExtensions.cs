@@ -15,7 +15,6 @@ public static class IdentityServiceExtensions
         services.AddIdentityCore<AppUser>(options =>
         {
             options.Password.RequireNonAlphanumeric = false;
-            options.User.RequireUniqueEmail = true;
         })
             .AddRoles<AppRole>()
             .AddRoleManager<RoleManager<AppRole>>()

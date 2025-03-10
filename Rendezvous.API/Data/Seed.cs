@@ -1,5 +1,5 @@
-using System.Security.Cryptography;
 using System.Text.Json;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.Entities;
 
@@ -7,9 +7,9 @@ namespace Rendezvous.API.Data;
 
 public class Seed
 {
-    public static async Task SeedUsers(DataContext context)
+    public static async Task SeedUsers(UserManager<AppUser> userManager)
     {
-        if (await context.Users.AnyAsync())
+        if (await userManager.Users.AnyAsync())
         {
             return;
         }
@@ -26,10 +26,8 @@ public class Seed
 
         foreach (var user in users)
         {
-            using var hmac = new HMACSHA512();
-            context.Users.Add(user);
+            user.UserName = user.UserName!.ToLower();
+            await userManager.CreateAsync(user, "P@$$w0rd");
         }
-
-        await context.SaveChangesAsync();
     }
 }
