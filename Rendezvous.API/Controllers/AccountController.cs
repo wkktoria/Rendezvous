@@ -1,16 +1,15 @@
-using System.Security.Cryptography;
-using System.Text;
 using AutoMapper;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Rendezvous.API.Data;
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
 using Rendezvous.API.Interfaces;
 
 namespace Rendezvous.API.Controllers;
 
-public class AccountController(DataContext context, ITokenService tokenService, IMapper mapper) : BaseApiController
+public class AccountController(UserManager<AppUser> userManager,
+    ITokenService tokenService, IMapper mapper) : BaseApiController
 {
     // POST: /api/account/register
     [HttpPost("register")]
@@ -21,13 +20,15 @@ public class AccountController(DataContext context, ITokenService tokenService, 
             return BadRequest("Username is taken.");
         }
 
-        using var hmac = new HMACSHA512();
-
         var user = mapper.Map<AppUser>(registerDto);
         user.UserName = registerDto.Username.ToLower();
 
-        context.Users.Add(user);
-        await context.SaveChangesAsync();
+        var result = await userManager.CreateAsync(user, registerDto.Password);
+
+        if (!result.Succeeded)
+        {
+            return BadRequest(result.Errors);
+        }
 
         return Ok(new UserDto
         {
@@ -42,13 +43,20 @@ public class AccountController(DataContext context, ITokenService tokenService, 
     [HttpPost("login")]
     public async Task<ActionResult<UserDto>> Login(LoginDto loginDto)
     {
-        var user = await context.Users
+        var user = await userManager.Users
             .Include(u => u.Photos)
-            .FirstOrDefaultAsync(u => u.UserName == loginDto.Username.ToLower());
+            .FirstOrDefaultAsync(u => u.NormalizedUserName == loginDto.Username.ToUpper());
 
         if (user == null || user.UserName == null)
         {
             return Unauthorized("Invalid username.");
+        }
+
+        var result = await userManager.CheckPasswordAsync(user, loginDto.Password);
+
+        if (!result)
+        {
+            return Unauthorized();
         }
 
         return Ok(new UserDto
@@ -63,6 +71,7 @@ public class AccountController(DataContext context, ITokenService tokenService, 
 
     private async Task<bool> UserExists(string username)
     {
-        return await context.Users.AnyAsync(u => u.NormalizedUserName == username.ToUpper());
+        return await userManager.Users
+            .AnyAsync(u => u.NormalizedUserName == username.ToUpper());
     }
 }
