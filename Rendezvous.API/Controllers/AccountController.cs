@@ -24,6 +24,7 @@ public class AccountController(UserManager<AppUser> userManager,
         user.UserName = registerDto.Username.ToLower();
 
         var result = await userManager.CreateAsync(user, registerDto.Password);
+        await userManager.AddToRoleAsync(user, "Member");
 
         if (!result.Succeeded)
         {
@@ -35,7 +36,7 @@ public class AccountController(UserManager<AppUser> userManager,
             Username = user.UserName,
             KnownAs = user.KnownAs,
             Gender = user.Gender,
-            Token = tokenService.CreateToken(user)
+            Token = await tokenService.CreateTokenAsync(user)
         });
     }
 
@@ -64,7 +65,7 @@ public class AccountController(UserManager<AppUser> userManager,
             Username = user.UserName,
             KnownAs = user.KnownAs,
             Gender = user.Gender,
-            Token = tokenService.CreateToken(user),
+            Token = await tokenService.CreateTokenAsync(user),
             PhotoUrl = user.Photos.FirstOrDefault(p => p.IsMain)?.Url
         });
     }
