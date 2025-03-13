@@ -4,6 +4,7 @@ using Rendezvous.API.Data;
 using Rendezvous.API.Entities;
 using Rendezvous.API.Extensions;
 using Rendezvous.API.Middleware;
+using Rendezvous.API.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -26,6 +27,7 @@ app.UseAuthorization();
 app.UseHttpsRedirection();
 
 app.MapControllers();
+app.MapHub<PresenceHub>("hubs/presence");
 
 using var scope = app.Services.CreateScope();
 var services = scope.ServiceProvider;

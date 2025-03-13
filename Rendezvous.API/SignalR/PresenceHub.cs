@@ -1,0 +1,20 @@
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.SignalR;
+using Rendezvous.API.Extensions;
+
+namespace Rendezvous.API.SignalR;
+
+[Authorize]
+public class PresenceHub : Hub
+{
+    public override async Task OnConnectedAsync()
+    {
+        await Clients.Others.SendAsync("UserIsOnline", Context.User?.GetUsername());
+    }
+
+    public override async Task OnDisconnectedAsync(Exception? exception)
+    {
+        await Clients.Others.SendAsync("UserIfOffline", Context.User?.GetUsername());
+        await base.OnDisconnectedAsync(exception);
+    }
+}
