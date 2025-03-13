@@ -4,6 +4,7 @@ using Rendezvous.API.Data.Repositories;
 using Rendezvous.API.Helpers;
 using Rendezvous.API.Interfaces;
 using Rendezvous.API.Services;
+using Rendezvous.API.SignalR;
 
 namespace Rendezvous.API.Extensions;
 
@@ -25,6 +26,8 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IPhotoService, PhotoService>();
         services.AddScoped<LogUserActivity>();
+
+        services.AddSingleton<PresenceTracker>();
 
         services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
         services.AddSignalR();

@@ -5,16 +5,39 @@ using Rendezvous.API.Extensions;
 namespace Rendezvous.API.SignalR;
 
 [Authorize]
-public class PresenceHub : Hub
+public class PresenceHub(PresenceTracker presenceTracker) : Hub
 {
     public override async Task OnConnectedAsync()
     {
-        await Clients.Others.SendAsync("UserIsOnline", Context.User?.GetUsername());
+        var user = Context.User;
+
+        if (user == null)
+        {
+            throw new HubException("Cannot get current user claim.");
+        }
+
+        await presenceTracker.UserConnectedAsync(user.GetUsername(), Context.ConnectionId);
+        await Clients.Others.SendAsync("UserIsOnline", user.GetUsername());
+
+        var currentUsers = await presenceTracker.GetOnlineUsersAsync();
+        await Clients.All.SendAsync("GetOnlineUsers", currentUsers);
     }
 
     public override async Task OnDisconnectedAsync(Exception? exception)
     {
-        await Clients.Others.SendAsync("UserIsOffline", Context.User?.GetUsername());
+        var user = Context.User;
+
+        if (user == null)
+        {
+            throw new HubException("Cannot get current user claim.");
+        }
+
+        await presenceTracker.UserDisconnectedAsync(user.GetUsername(), Context.ConnectionId);
+        await Clients.Others.SendAsync("UserIsOffline", user.GetUsername());
+
+        var currentUsers = await presenceTracker.GetOnlineUsersAsync();
+        await Clients.All.SendAsync("GetOnlineUsers", currentUsers);
+
         await base.OnDisconnectedAsync(exception);
     }
 }
