@@ -8,7 +8,8 @@ using Rendezvous.API.Interfaces;
 namespace Rendezvous.API.SignalR;
 
 public class MessageHub(IMessageRepository messageRepository,
-    IUserRepository userRepository, IMapper mapper) : Hub
+    IUserRepository userRepository, IMapper mapper,
+    IHubContext<PresenceHub> presenceHubContext) : Hub
 {
     public override async Task OnConnectedAsync()
     {
@@ -68,6 +69,20 @@ public class MessageHub(IMessageRepository messageRepository,
         if (group != null && group.Connections.Any(c => c.Username == recipient.UserName))
         {
             message.DateRead = DateTime.UtcNow;
+        }
+        else
+        {
+            var connections = await PresenceTracker
+                .GetConnectionsForUserAsync(recipient.UserName);
+
+            if (connections != null && connections.Count != 0)
+            {
+                await presenceHubContext.Clients.Clients(connections).SendAsync("NewMessageReceived", new
+                {
+                    username = sender.UserName,
+                    knownAs = sender.KnownAs
+                });
+            }
         }
 
         await messageRepository.AddMessageAsync(message);
