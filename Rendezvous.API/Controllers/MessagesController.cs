@@ -5,13 +5,12 @@ using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
 using Rendezvous.API.Extensions;
 using Rendezvous.API.Helpers;
-using Rendezvous.API.Interfaces.Repositories;
+using Rendezvous.API.Interfaces;
 
 namespace Rendezvous.API.Controllers;
 
 [Authorize]
-public class MessagesController(IMessageRepository messageRepository,
-    IUserRepository userRepository, IMapper mapper) : BaseApiController
+public class MessagesController(IUnitOfWork unitOfWork, IMapper mapper) : BaseApiController
 {
     [HttpGet]
     public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessagesForUser(
@@ -19,7 +18,7 @@ public class MessagesController(IMessageRepository messageRepository,
     {
         messageParams.Username = User.GetUsername();
 
-        var messages = await messageRepository.GetMessagesForUserAsync(messageParams);
+        var messages = await unitOfWork.MessageRepository.GetMessagesForUserAsync(messageParams);
 
         Response.AddPaginationHeader(messages);
 
@@ -30,7 +29,7 @@ public class MessagesController(IMessageRepository messageRepository,
     public async Task<ActionResult<IEnumerable<MessageDto>>> GetMessageThread(string username)
     {
         var currentUsername = User.GetUsername();
-        return Ok(await messageRepository.GetMessageThreadAsync(currentUsername, username));
+        return Ok(await unitOfWork.MessageRepository.GetMessageThreadAsync(currentUsername, username));
     }
 
     [HttpPost]
@@ -43,9 +42,9 @@ public class MessagesController(IMessageRepository messageRepository,
             return BadRequest("You cannot message yourself.");
         }
 
-        var sender = await userRepository
+        var sender = await unitOfWork.UserRepository
             .GetUserByUsernameAsync(username);
-        var recipient = await userRepository
+        var recipient = await unitOfWork.UserRepository
             .GetUserByUsernameAsync(createMessageDto.RecipientUsername);
 
         if (sender == null || recipient == null || sender.UserName == null || recipient.UserName == null)
@@ -61,9 +60,9 @@ public class MessagesController(IMessageRepository messageRepository,
             RecipientUsername = recipient.UserName,
             Content = createMessageDto.Content
         };
-        await messageRepository.AddMessageAsync(message);
+        await unitOfWork.MessageRepository.AddMessageAsync(message);
 
-        if (await messageRepository.SaveAllAsync())
+        if (await unitOfWork.CompleteAsync())
         {
             return Ok(mapper.Map<MessageDto>(message));
         }
@@ -75,7 +74,7 @@ public class MessagesController(IMessageRepository messageRepository,
     public async Task<ActionResult> DeleteMessage(int id)
     {
         var username = User.GetUsername();
-        var message = await messageRepository.GetMessageAsync(id);
+        var message = await unitOfWork.MessageRepository.GetMessageAsync(id);
 
         if (message == null)
         {
@@ -99,10 +98,10 @@ public class MessagesController(IMessageRepository messageRepository,
 
         if (message is { SenderDeleted: true, RecipientDeleted: true })
         {
-            messageRepository.DeleteMessage(message);
+            unitOfWork.MessageRepository.DeleteMessage(message);
         }
 
-        if (await messageRepository.SaveAllAsync())
+        if (await unitOfWork.CompleteAsync())
         {
             return Ok();
         }
