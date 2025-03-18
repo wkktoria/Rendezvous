@@ -2,7 +2,8 @@ using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.Data;
 using Rendezvous.API.Data.Repositories;
 using Rendezvous.API.Helpers;
-using Rendezvous.API.Interfaces;
+using Rendezvous.API.Interfaces.Repositories;
+using Rendezvous.API.Interfaces.Services;
 using Rendezvous.API.Services;
 using Rendezvous.API.SignalR;
 

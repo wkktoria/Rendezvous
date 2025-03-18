@@ -4,7 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
-using Rendezvous.API.Interfaces;
+using Rendezvous.API.Interfaces.Services;
 
 namespace Rendezvous.API.Controllers;
 

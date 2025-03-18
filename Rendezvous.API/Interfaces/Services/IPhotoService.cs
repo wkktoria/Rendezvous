@@ -1,6 +1,6 @@
 using CloudinaryDotNet.Actions;
 
-namespace Rendezvous.API.Interfaces;
+namespace Rendezvous.API.Interfaces.Services;
 
 public interface IPhotoService
 {

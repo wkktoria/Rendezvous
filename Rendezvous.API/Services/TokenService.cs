@@ -4,7 +4,7 @@ using System.Text;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using Rendezvous.API.Entities;
-using Rendezvous.API.Interfaces;
+using Rendezvous.API.Interfaces.Services;
 
 namespace Rendezvous.API.Services;
 

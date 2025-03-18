@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
 using Rendezvous.API.Helpers;
-using Rendezvous.API.Interfaces;
+using Rendezvous.API.Interfaces.Repositories;
 
 namespace Rendezvous.API.Data.Repositories;
 

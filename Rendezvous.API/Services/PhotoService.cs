@@ -2,7 +2,7 @@ using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Microsoft.Extensions.Options;
 using Rendezvous.API.Helpers;
-using Rendezvous.API.Interfaces;
+using Rendezvous.API.Interfaces.Services;
 
 namespace Rendezvous.API.Services;
 

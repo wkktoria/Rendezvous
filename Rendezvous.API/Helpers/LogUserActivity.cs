@@ -1,6 +1,6 @@
 using Microsoft.AspNetCore.Mvc.Filters;
 using Rendezvous.API.Extensions;
-using Rendezvous.API.Interfaces;
+using Rendezvous.API.Interfaces.Repositories;
 
 namespace Rendezvous.API.Helpers;
 

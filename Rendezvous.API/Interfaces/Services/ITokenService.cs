@@ -1,6 +1,6 @@
 using Rendezvous.API.Entities;
 
-namespace Rendezvous.API.Interfaces;
+namespace Rendezvous.API.Interfaces.Services;
 
 public interface ITokenService
 {

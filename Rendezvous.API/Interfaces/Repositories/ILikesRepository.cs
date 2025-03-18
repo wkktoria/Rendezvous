@@ -2,7 +2,7 @@ using Rendezvous.API.DTOs;
 using Rendezvous.API.Entities;
 using Rendezvous.API.Helpers;
 
-namespace Rendezvous.API.Interfaces;
+namespace Rendezvous.API.Interfaces.Repositories;
 
 public interface ILikesRepository
 {
