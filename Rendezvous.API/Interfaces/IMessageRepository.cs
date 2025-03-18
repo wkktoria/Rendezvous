@@ -26,4 +26,6 @@ public interface IMessageRepository
     Task<Connection?> GetConnectionAsync(string connectionId);
 
     Task<Group?> GetMessageGroupAsync(string groupName);
+
+    Task<Group?> GetGroupForConnectionAsync(string connectionId);
 }
