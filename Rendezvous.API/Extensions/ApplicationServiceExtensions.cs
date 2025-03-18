@@ -2,6 +2,7 @@ using Microsoft.EntityFrameworkCore;
 using Rendezvous.API.Data;
 using Rendezvous.API.Data.Repositories;
 using Rendezvous.API.Helpers;
+using Rendezvous.API.Interfaces;
 using Rendezvous.API.Interfaces.Repositories;
 using Rendezvous.API.Interfaces.Services;
 using Rendezvous.API.Services;
@@ -27,6 +28,7 @@ public static class ApplicationServiceExtensions
         services.AddScoped<IMessageRepository, MessageRepository>();
         services.AddScoped<IPhotoService, PhotoService>();
         services.AddScoped<LogUserActivity>();
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddSingleton<PresenceTracker>();
 
