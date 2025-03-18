@@ -11,6 +11,11 @@
         <div class="mb-2 text-success">
           <i class="fa fa-user-circle"></i><span class="ms-1">Online now</span>
         </div>
+        } @if (hasLiked()) {
+        <div class="mb-2 text-primary">
+          <i class="fa fa-heart"></i>
+          <span class="ms-1">You like {{ member.knownAs }}</span>
+        </div>
         }
         <div>
           <strong>Location:</strong>
@@ -31,7 +36,7 @@
       </div>
       <div class="card-footer bg-white">
         <div class="btn-group d-flex">
-          <button class="btn btn-primary">Like</button>
+          <button class="btn btn-primary" (click)="toggleLike()">Like</button>
           <button class="btn btn-success" (click)="selectTab('Messages')">
             Message
           </button>
