@@ -19,6 +19,8 @@ public class DataContext(DbContextOptions options)
 
     public DbSet<Connection> Connections { get; set; }
 
+    public DbSet<Photo> Photos { get; set; }
+
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
@@ -59,5 +61,7 @@ public class DataContext(DbContextOptions options)
             .HasOne(m => m.Sender)
             .WithMany(u => u.MessagesSent)
             .OnDelete(DeleteBehavior.Restrict);
+
+        modelBuilder.Entity<Photo>().HasQueryFilter(p => p.IsApproved);
     }
 }

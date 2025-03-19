@@ -1,1 +1,27 @@
-<p>photo-management works!</p>
+<div class="d-flex flex-wrap justify-content-start align-items-start gap-4">
+  @for(photo of photos; track photo.id) {
+  <div>
+    <h4>{{ photo.username }}</h4>
+    <img
+      class="img-thumbnail"
+      src="{{ photo.url }}"
+      alt="{{ photo.username }}"
+      style="width: 150px; height: 150px"
+    />
+    <div class="mt-2 text-center">
+      <button
+        class="btn btn-sm btn-success me-1"
+        (click)="approvePhoto(photo.id)"
+      >
+        Approve
+      </button>
+      <button
+        class="btn btn-sm btn-danger me-1"
+        (click)="rejectPhoto(photo.id)"
+      >
+        Reject
+      </button>
+    </div>
+  </div>
+  }
+</div>

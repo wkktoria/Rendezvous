@@ -13,6 +13,8 @@ public class Photo
 
     public string? PublicId { get; set; }
 
+    public bool IsApproved { get; set; }
+
     #region Navigation Properties
     public int AppUserId { get; set; }
 
