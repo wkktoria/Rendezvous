@@ -1,6 +1,6 @@
 # Rendezvous
 
-![Demo of Rendezvous](demo.gif)
+![Demo of Rendezvous](docs/rendezvous-matches.png)
 
 Rendezvous is dating application which can help members find matches, communicate and build connections.
 
