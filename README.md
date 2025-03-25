@@ -5,11 +5,14 @@
 Rendezvous is dating application which can help members find matches, communicate and build connections.
 
 **Table of Contents**
+
 - [Functionalities](#functionalities)
   * [Members](#members)
   * [Moderators](#moderators)
   * [Admins](#admins)
 - [Run Application](#run-application)
+  * [Requirements](#requirements)
+  * [Steps](#steps)
 
 ## Functionalities
 
@@ -33,11 +36,15 @@ Application provides functionalities based on roles.
 
 ## Run Application
 
-**Requirements**:
-- Docker
+### Requirements
+
+- [Docker](https://www.docker.com)
+
+
+### Steps
 
 1. Create `.env` file (see: [.env.example](.env.example)).
 2. Set up [appsettings.json](Rendezvous.API/appsettings.json).
 3. Run the following commane: `docker compose up -d`.
 
-Application should be available at [localhost:8080](http://localhost:8080).
+Application should be available at `localhost:8080`.
