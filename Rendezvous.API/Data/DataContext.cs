@@ -50,7 +50,7 @@ public class DataContext(DbContextOptions options)
             .HasOne(ul => ul.TargetUser)
             .WithMany(u => u.LikedByUsers)
             .HasForeignKey(ul => ul.TargetUserId)
-            .OnDelete(DeleteBehavior.Cascade);
+            .OnDelete(DeleteBehavior.NoAction);
 
         modelBuilder.Entity<Message>()
             .HasOne(m => m.Recipient)
