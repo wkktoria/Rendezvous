@@ -8,3 +8,12 @@ services:
     platform: linux/amd64
     ports:
       - 1433:1433
+  api:
+    container_name: api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8080:8080
+    depends_on:
+      - sql
